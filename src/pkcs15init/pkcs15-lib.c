@@ -951,10 +951,13 @@ sc_pkcs15init_store_puk(struct sc_pkcs15_card *p15card,
 	auth_info->auth_id = args->puk_id;
 
 	/* Now store the PINs */
-	if (profile->ops->create_pin)
+	if (profile->ops->create_pin)   {
 		r = sc_pkcs15init_create_pin(p15card, profile, pin_obj, args);
-	else
-		LOG_TEST_RET(ctx, SC_ERROR_NOT_SUPPORTED, "In Old API store PUK object is not supported");
+	}
+	else   {
+		sc_log(ctx, "In Old API store PUK object is not supported");
+		LOG_FUNC_RETURN(ctx, SC_ERROR_NOT_SUPPORTED);
+	}
 
 	if (r >= 0)
 		r = sc_pkcs15init_add_object(p15card, profile, SC_PKCS15_AODF, pin_obj);
@@ -1889,8 +1892,11 @@ sc_pkcs15init_store_data(struct sc_pkcs15_card *p15card, struct sc_profile *prof
 	}
 
 	r = sc_pkcs15init_delete_by_path(profile, p15card, &file->path);
-	if (r && r != SC_ERROR_FILE_NOT_FOUND)
-		LOG_TEST_RET(ctx, r, "Cannot delete file");
+	if (r && r != SC_ERROR_FILE_NOT_FOUND)   {
+		sc_file_free(file);
+		sc_log(ctx, "Cannot delete file");
+		LOG_FUNC_RETURN(ctx, r);
+	}
 
 	r = sc_pkcs15init_update_file(profile, p15card, file, data->value, data->len);
 
@@ -2903,11 +2909,11 @@ sc_pkcs15init_change_attrib(struct sc_pkcs15_card *p15card, struct sc_profile *p
 			struct sc_file *file = NULL;
 
 			r = sc_profile_get_file_by_path(profile, &df->path, &file);
-			LOG_TEST_RET(ctx, r, "Cannot instantiate file by path");
-
-			r = sc_pkcs15init_update_file(profile, p15card, file, buf, bufsize);
+			if (!r)
+				r = sc_pkcs15init_update_file(profile, p15card, file, buf, bufsize);
+			if (file)
+				sc_file_free(file);
 			free(buf);
-			sc_file_free(file);
 		}
 	}
 

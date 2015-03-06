@@ -732,7 +732,7 @@ cosm_store_key(struct sc_profile *profile, struct sc_pkcs15_card *p15card,
 		SC_TEST_RET(ctx, SC_LOG_DEBUG_NORMAL, SC_ERROR_NOT_SUPPORTED, "Store key failed: RSA only supported");
 
 	sc_debug(ctx, SC_LOG_DEBUG_NORMAL, "store key with ID:%s and path:%s", sc_pkcs15_print_id(&key_info->id),
-		       	sc_print_path(&key_info->path));
+		sc_print_path(&key_info->path));
 
 	rv = sc_select_file(p15card->card, &key_info->path, &file);
 	SC_TEST_RET(ctx, SC_LOG_DEBUG_NORMAL, rv, "Cannot store key: select key file failed");

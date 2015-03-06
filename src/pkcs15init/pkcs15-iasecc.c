@@ -334,7 +334,8 @@ iasecc_file_convert_acls(struct sc_context *ctx, struct sc_profile *profile, str
 		if (acl)   {
 			switch (acl->method)   {
 			case SC_AC_IDA:
-				LOG_TEST_RET(ctx, SC_ERROR_NOT_SUPPORTED, "'IDA' not actually supported");
+				sc_log(ctx, "ACL method 'IDA' not supported");
+				return 0;
 			case SC_AC_SCB:
 				if ((acl->key_ref & IASECC_SCB_METHOD_MASK) == IASECC_SCB_METHOD_USER_AUTH)   {
 					acl->method = SC_AC_SEN;
@@ -426,6 +427,8 @@ iasecc_sdo_set_key_acls_from_profile(struct sc_profile *profile, struct sc_card 
 
 	sc_log(ctx, "AMB: %X, CNTR %i, %x %x %x %x %x %x",
 			amb, cntr, scb[0], scb[1], scb[2], scb[3], scb[4], scb[5], scb[6]);
+	if (file)
+		sc_file_free(file);
 	LOG_FUNC_RETURN(ctx, SC_SUCCESS);
 }
 

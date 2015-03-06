@@ -573,9 +573,9 @@ sc_profile_get_file_instance(struct sc_profile *profile, const char *name,
 		int index, sc_file_t **ret)
 {
 	struct sc_context *ctx = profile->card->ctx;
-	struct file_info *fi;
-	struct sc_file *file;
-	int r;
+	struct file_info *fi = NULL;
+	struct sc_file *file = NULL;
+	int r = 0;
 
 	LOG_FUNC_CALLED(ctx);
 	sc_log(ctx, "try to get '%s' file instance", name);
@@ -591,20 +591,24 @@ sc_profile_get_file_instance(struct sc_profile *profile, const char *name,
 	file->id += index;
         if(file->type == SC_FILE_TYPE_BSO) {
 		r = sc_profile_add_file(profile, name, file);
-		LOG_TEST_RET(ctx, r, "Profile error: cannot add BSO file");
+		if (r)
+			sc_log(ctx, "Profile error: cannot add BSO file");
 	}
 	else if (file->path.len)   {
 		file->path.value[file->path.len - 2] = (file->id >> 8) & 0xFF;
 		file->path.value[file->path.len - 1] = file->id & 0xFF;
 
 		r = sc_profile_add_file(profile, name, file);
-		LOG_TEST_RET(ctx, r, "Profile error: cannot add file");
+		if (r)
+			sc_log(ctx, "Profile error: cannot add file");
 	}
 
-	if (ret)
+	if  (r || !ret)
+		sc_file_free(file);
+	else
 		*ret = file;
 
-	LOG_FUNC_RETURN(ctx, SC_SUCCESS);
+	LOG_FUNC_RETURN(ctx, r);
 }
 
 int
@@ -2374,15 +2378,21 @@ expr_eval(struct num_exp_ctx *ctx, unsigned int *vp, unsigned int pri)
 		new_pri = 0;
 		switch (op) {
 		case '*':
+			/* fall through */
 		case '/':
 			new_pri++;
+			/* fall through */
 		case '+':
+			/* fall through */
 		case '-':
 			new_pri++;
+			/* fall through */
 		case '&':
 			new_pri++;
+			/* fall through */
 		case '|':
 			new_pri++;
+			/* fall through */
 		case ')':
 			break;
 		default:
