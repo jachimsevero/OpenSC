@@ -18,7 +18,7 @@ OBJECTS			= \
 	card-mcrd.obj card-starcos.obj card-openpgp.obj card-jcop.obj \
 	card-oberthur.obj card-belpic.obj card-atrust-acos.obj \
 	card-entersafe.obj card-epass2003.obj \
-	card-incrypto34.obj card-piv.obj card-muscle.obj card-acos5.obj \
+	card-incrypto34.obj card-piv.obj card-muscle.obj card-acos5.obj card-acos5_64.obj \
 	card-asepcos.obj card-akis.obj card-gemsafeV1.obj card-rutoken.obj \
 	card-rtecp.obj card-westcos.obj card-myeid.obj card-ias.obj \
 	card-itacns.obj card-authentic.obj \

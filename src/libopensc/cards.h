@@ -143,6 +143,8 @@ enum {
 	/* ACOS5 driver */
 	SC_CARD_TYPE_ACOS5_BASE = 16000,
 	SC_CARD_TYPE_ACOS5_GENERIC,
+	SC_CARD_TYPE_ACOS5_32K, /* implemented in card-acos5.c */
+	SC_CARD_TYPE_ACOS5_64K, /* implemented in card-acos5_64.c */
 
 	/* Athena APCOS cards */
 	SC_CARD_TYPE_ASEPCOS_BASE = 17000,
@@ -227,6 +229,7 @@ extern sc_card_driver_t *sc_get_incrypto34_driver(void);
 extern sc_card_driver_t *sc_get_piv_driver(void);
 extern sc_card_driver_t *sc_get_muscle_driver(void);
 extern sc_card_driver_t *sc_get_acos5_driver(void);
+extern sc_card_driver_t *sc_get_acos5_64_driver(void);
 extern sc_card_driver_t *sc_get_asepcos_driver(void);
 extern sc_card_driver_t *sc_get_akis_driver(void);
 extern sc_card_driver_t *sc_get_entersafe_driver(void);
