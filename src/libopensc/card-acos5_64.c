@@ -185,7 +185,7 @@ acos5_64_get_response_large(struct sc_card *card, struct sc_apdu *apdu, size_t o
       sc_log(ctx, "result from card->ops->get_response(card, &resp_len, resp): %d\n", r);
   		if (r < 0)   {
   #ifdef ENABLE_SM
-  	    sc_log(ctx, "Here I am");
+  	    /*sc_log(ctx, "Here I am");*/
   			if (resp_len)   {
   				sc_log(ctx, "SM response data %s", sc_dump_hex(resp, resp_len));
   				sc_sm_update_apdu_response(card, resp, resp_len, r, apdu);
@@ -356,7 +356,7 @@ acos5_64_get_serialnr(sc_card_t * card, sc_serial_number_t * serial)
 		LOG_FUNC_RETURN(card->ctx, SC_SUCCESS);
 	}
 	/* not cached, retrieve serial number using GET CARD INFO. */
-	sc_log(card->ctx, "Here I am before sc_format_apdu\n");
+	/*sc_log(card->ctx, "Here I am before sc_format_apdu\n");*/
 	/* Case 2 short APDU, 5 bytes: ins=14 p1=00 p2=00 lc=0000 le=0006 */
 	sc_format_apdu(card, &apdu, SC_APDU_CASE_2_SHORT, 0x14, 0x00, 0x00);
 	apdu.cla = 0x80;
@@ -430,10 +430,6 @@ acos5_64_init(struct sc_card *card)
 	card->max_recv_size = 256; /*chain deciphering with a 4096-bit key gives back chunks of max. 256 bytes !!*/
 
 	algoflags = SC_ALGORITHM_RSA_RAW  /* RSA support */
-						| SC_ALGORITHM_RSA_HASH_NONE
-						| SC_ALGORITHM_RSA_HASH_SHA1
-						| SC_ALGORITHM_RSA_HASH_SHA256
-
 						| SC_ALGORITHM_NEED_USAGE
 						| SC_ALGORITHM_ONBOARD_KEY_GEN;
 
